@@ -9,31 +9,36 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: HomePage(title: 'Home'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   int _counter = 0;
 
+  List<String> nameList = ['images/oldmangaram.jpg', 'images/jazno.jpg', 'images/zerueru.png', 'images/mamimifooly.jpg'];
   void _incrementCounter() {
     setState(() {
       _counter++;
     });
+  }
+
+  void clicked(int index) {
+    print(index);
   }
 
   @override
@@ -44,50 +49,29 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: 
-                  Container(
-                    margin: const EdgeInsets.all(0),
-                    padding: const EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blueAccent)
-                    ),
-                    child: Image.asset('images/oldmangaram.jpg'),
-                  )
-                ),
-                Expanded(
-                  child: 
-                  Container(
-                    margin: const EdgeInsets.all(0),
-                    padding: const EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blueAccent)
-                    ),
-                    child: Image.asset('images/jazno.jpg'),
-                  )
+        child: GridView.count(
+          padding: EdgeInsets.all(4.0),
+          childAspectRatio: 8.0 / 14,
+          crossAxisSpacing: 1.0,
+          mainAxisSpacing: 1.0,
+          crossAxisCount: 2,
+          children: List.generate(10, (index) {
+            return 
+              GestureDetector(
+                onTap: () {
+                  print("onTap called. $index");
+                },
+                child: 
+                Container(
+                  color: Colors.yellow, 
+                  child: Image.asset(
+                    nameList[index % nameList.length], 
+                    fit: BoxFit.cover)
                 )
-              ]
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Flexible(
-                  child: Image.asset('images/mamimifooly.jpg')
-                ),
-                Flexible(
-                  child: Image.asset('images/zerueru.png')
-                )
-              ]
-            )
-          ]
+              );
+            
+          }),
         ),
-
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
