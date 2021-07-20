@@ -43,35 +43,14 @@ class WebService {
   }
 }
 
-class Person with ChangeNotifier {
-    
-  Person({required this.name, required this.age});
-  
-  final String name;
-  int age;
-  
-  void increaseAge() {
-    this.age++;
-    notifyListeners();
-  }
-}
-
 class MainViewModel with ChangeNotifier {
 
     List<Character> characters = [];
     var webserivce = WebService();
-    var person = Person(name: "rex", age: 23);
+
     void request() async {
       characters = await webserivce.fetch();
-      print(characters.length);
       notifyListeners();
-    }
-    void echo() {
-        person.removeListener(() { });
-        person.addListener(() {
-          print("change {$person.age}");
-        });
-        person.increaseAge();
     }
 
     int count() {

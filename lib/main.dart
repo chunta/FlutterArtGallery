@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'mainviewmodel.dart';
 
 void main() {
-  runApp(MainApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => MainViewModel()
+      )
+    ],
+    child: MainApp(),
+  ));
 }
 
 class MainApp extends StatelessWidget {
@@ -28,54 +36,41 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  
-  MainViewModel viewModel = MainViewModel();
 
   @override
   void initState() {
-    super.initState();
-    viewModel.addListener(() {
-      print("view model done with: ${viewModel.count()}");
-      Align(child: CircularProgressIndicator());
-    });
+    MainViewModel viewModel =
+    Provider.of<MainViewModel>(context, listen: false);
     viewModel.request();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called.
+
+    MainViewModel viewModel = Provider.of<MainViewModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Center(
         child: GridView.count(
-          padding: EdgeInsets.all(4.0),
-          childAspectRatio: 8.0 / 14,
-          crossAxisSpacing: 1.0,
-          mainAxisSpacing: 1.0,
-          crossAxisCount: 2,
-          children: List.generate(viewModel.count(), (index) {
-            return 
-              GestureDetector(
-                onTap: () {
-                  print("onTap called. $index");
-                  viewModel.echo();
-                  viewModel.request();
-                },
-                child: 
-                Container(
-                  color: Colors.yellow, 
-                  child: Image.asset(
-                    viewModel.getImageUrl(index),
-                    fit: BoxFit.cover)
-                )
+            padding: EdgeInsets.all(4.0),
+            mainAxisSpacing: 1.0,
+            childAspectRatio: 8 / 14.0,
+            crossAxisCount: 2,
+            children: List.generate(viewModel.count(), (index) {
+              return GestureDetector(
+               onTap: () { print("tap $index"); },
+               child: Container(
+                color: Colors.amber,
+                child: Image.network(viewModel.getImageUrl(index), fit: BoxFit.cover),
+               ),
               );
-            
-          }),
+          })
         ),
-      ),
-    );
+    ));
   }
 }
 
