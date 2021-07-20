@@ -42,6 +42,7 @@ class _MainPageState extends State<MainPage> {
     MainViewModel viewModel =
     Provider.of<MainViewModel>(context, listen: false);
     viewModel.request();
+    print("request at initState");
     super.initState();
   }
 

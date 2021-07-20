@@ -49,8 +49,10 @@ class MainViewModel with ChangeNotifier {
     var webserivce = WebService();
 
     void request() async {
-      characters = await webserivce.fetch();
-      notifyListeners();
+      webserivce.fetch().then((List<Character> list) {
+        characters = list;
+        notifyListeners();
+      });
     }
 
     int count() {
