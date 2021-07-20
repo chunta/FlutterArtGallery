@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'mainviewmodel.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MainApp());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,32 +13,32 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(title: 'Home'),
+      home: MainPage(title: 'Main'),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  HomePage({Key? key, required this.title}) : super(key: key);
+class MainPage extends StatefulWidget {
+  MainPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int _counter = 0;
+class _MainPageState extends State<MainPage> {
+  
+  MainViewModel viewModel = MainViewModel();
 
-  List<String> nameList = ['images/oldmangaram.jpg', 'images/jazno.jpg', 'images/zerueru.png', 'images/mamimifooly.jpg'];
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
+  @override
+  void initState() {
+    super.initState();
+    viewModel.addListener(() {
+      print("view model done with: ${viewModel.count()}");
+      Align(child: CircularProgressIndicator());
     });
-  }
-
-  void clicked(int index) {
-    print(index);
+    viewModel.request();
   }
 
   @override
@@ -55,28 +55,25 @@ class _HomePageState extends State<HomePage> {
           crossAxisSpacing: 1.0,
           mainAxisSpacing: 1.0,
           crossAxisCount: 2,
-          children: List.generate(10, (index) {
+          children: List.generate(viewModel.count(), (index) {
             return 
               GestureDetector(
                 onTap: () {
                   print("onTap called. $index");
+                  viewModel.echo();
+                  viewModel.request();
                 },
                 child: 
                 Container(
                   color: Colors.yellow, 
                   child: Image.asset(
-                    nameList[index % nameList.length], 
+                    viewModel.getImageUrl(index),
                     fit: BoxFit.cover)
                 )
               );
             
           }),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
       ),
     );
   }
